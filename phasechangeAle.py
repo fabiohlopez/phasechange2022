@@ -7,36 +7,37 @@ import matplotlib.pyplot as plt
 #******** Iterative******#
 N = 108
 kk = 1 # Iterative steps
-dt = 500. #step in seg
+dt = 6. #step in seg
 
 
 #####Fluid Properties#######
 mf = 0.01 # Kg/seg mass flow fluid
 cpf = 1000. # J/Kg K specific heat fluid
-Cpf = 1000. # J/K specific heat fluid
 
 
 #####Solid Properties#######
 m = 1. # Kg amount of substance
-rho = 2000. #Kg/m3 density of substance
-k = 0.24 # W/m K thermal conductivity
-cs = 750. # J/kg K specific heat substance
-Cs = 750. # J/K specific heat substance
+rho = 2320. # Kg/m3 density of substance
+k = 2.15 # W/m K thermal conductivity
+cs = 810. # J/kg K specific heat substance
 
 
 #####Storage Recipied#######
-At = 1. #m2 cross area of storage
-dA = At/N #m2 element area of storage
-length = 2. #length of the storage in meters
+At = 1. # m2 cross area of storage
+dA = At/N # m2 element area of storage
+length = 2. # length of the storage in meters
 dx = length/N
 U = 1. # losses W/m2 K obtained from UA product
-hv = 2000. #  volumetric heat transfer coefficient
+D = 0.02 # stone's diameter
+G0 = mf / At
+#hv = 650 * pow((G0 / D), 0.7)
+hv = 2000. # volumetric heat transfer coefficient
 eps = 0.42 # porosity
 
 
-theta = (mf * Cpf)/(rho *cs * (1 - eps) * At * length) # J/Celcius
+theta = (mf * cpf)/(rho *cs * (1 - eps) * At * length) # J/Celcius
 NTU = hv * At * length / (mf * cpf) # Sin Unidades
-dtheta = dt * (mf * Cpf)/ (rho *cs * 0.5 * At * length) # J/Celcius
+dtheta = dt * (mf * cpf)/ (rho *cs * (1 - eps) * At * length) # J/Celcius
 omega = 1. - np.exp((-1) * NTU/N) # Sin Unidades
 
 
@@ -53,7 +54,7 @@ b = np.zeros(N+1)
 
 
 for i in range(0, N + 1, 1):
-    b [i] = dtheta *0.5 * (N * omega + U * dA /(mf*Cpf))
+    b [i] = dtheta *0.5 * (N * omega + U * dA /(mf*cpf))
     Tf [i] = Tss [i] = Ts [i] = Ta [i] = 278.15
 
 with open("Tamb2.txt", "r") as archivo:
@@ -75,12 +76,12 @@ while(kk<=109):
     kk = kk + 8
     Tf [0] = 291.149 - 0.0127* kk * kk + 1.419 * kk  
     for i in range(0, N , 1):        
-        a [i] = dtheta * ( N * omega * Tf [i]  + U * dA * Ta [int(kk)] * (1 /mf*Cpf) )
+        a [i] = dtheta * ( N * omega * Tf [i]  + U * dA * Ta [int(kk)] * (1 /mf*cpf) )
         Tss [i] = Ts [i]
-        Ts [i] = 0.99*( a [i]/ (1 - b [i]) + ( (1 - b [i]) * Tss [i]) / (1 + b [i]) ) 
+        Ts [i] = 0.99*( a [i]/ (1 + b [i]) + ( (1 - b [i]) * Tss [i]) / (1 + b [i]) ) 
         Tf [i+1] = (1.0 - omega) * Tf [i] * 0.99 + omega * 0.5 * (Ts [i] + Tss [i])
         
-        qac [i] = At * rho *cs * (1 - eps) * (Ts [i] - Tss [i])
+        #qac [i] = At * rho *cs * (1 - eps) * (Ts [i] - Tss [i])
         
     # Plot Results    
     fig, ax = plt.subplots()  # Create a figure and an axes.
@@ -90,7 +91,7 @@ while(kk<=109):
     ax.set_xlabel('axial direction')  # Add an x-label to the axes.
     ax.set_ylabel('temperature')  # Add a y-label to the axes.
     ax.set_title("Result")  # Add a title to the axes.
-    ax.set_ylim(293., 369.)
+    ax.set_ylim(283., 369.)
     ax.legend()  # Add a legend.
     ax.grid()
     plt.show()
