@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 #******** Iterative******#
 N = 108
 kk = 1 # Iterative steps
-dt = 6. #step in seg
-
+dt = 5. #step in seg
+#dt critico = 13375 o *1/6 = 2229 seg, segun paper
 
 #####Fluid Properties#######
 mf = 0.01 # Kg/seg mass flow fluid
@@ -31,7 +31,7 @@ U = 1. # losses W/m2 K obtained from UA product
 D = 0.02 # stone's diameter
 G0 = mf / At
 #hv = 650 * pow((G0 / D), 0.7)
-hv = 2000. # volumetric heat transfer coefficient
+hv = 200. # volumetric heat transfer coefficient
 eps = 0.42 # porosity
 
 
