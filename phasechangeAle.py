@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 #******** Iterative******#
 N = 108
 kk = 1 # Iterative steps
-dt = 5. #step in seg
+dt = 4. #step in seg
 #dt critico = 13375 o *1/6 = 2229 seg, segun paper
 
 #####Fluid Properties#######
@@ -35,9 +35,9 @@ hv = 200. # volumetric heat transfer coefficient
 eps = 0.42 # porosity
 
 
-theta = (mf * cpf)/(rho *cs * (1 - eps) * At * length) # J/Celcius
+#theta = (mf * cpf)/(rho * cs * (1 - eps) * At * length) # J/Celcius
 NTU = hv * At * length / (mf * cpf) # Sin Unidades
-dtheta = dt * (mf * cpf)/ (rho *cs * (1 - eps) * At * length) # J/Celcius
+dtheta = dt * (mf * cpf)/ (rho * cs * (1 - eps) * At * length) # J/Celcius
 omega = 1. - np.exp((-1) * NTU/N) # Sin Unidades
 
 
@@ -55,7 +55,7 @@ b = np.zeros(N+1)
 
 for i in range(0, N + 1, 1):
     b [i] = dtheta *0.5 * (N * omega + U * dA /(mf*cpf))
-    Tf [i] = Tss [i] = Ts [i] = Ta [i] = 278.15
+    Tf [i] = Tss [i] = Ts [i] = Ta [i] = 288.15
 
 with open("Tamb2.txt", "r") as archivo:
     #Tamb = archivo.read()
