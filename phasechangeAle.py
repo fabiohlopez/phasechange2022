@@ -53,9 +53,9 @@ a = np.zeros(N+1)
 b = np.zeros(N+1)
 
 
-for i in range(0, N + 1, 1):
+for i in range(0, N + 1 , 1):
     b [i] = dtheta *0.5 * (N * omega + U * dA /(mf*cpf))
-    Tf [i] = Tss [i] = Ts [i] = Ta [i] = 288.15
+    Tf [i] = Tss [i] = Ts [i] = Ta [i] = 298.15
 
 with open("Tamb2.txt", "r") as archivo:
     #Tamb = archivo.read()
@@ -79,6 +79,7 @@ while(kk<=109):
         a [i] = dtheta * ( N * omega * Tf [i]  + U * dA * Ta [int(kk)] * (1 /mf*cpf) )
         Tss [i] = Ts [i]
         Ts [i] = 0.99*( a [i]/ (1 + b [i]) + ( (1 - b [i]) * Tss [i]) / (1 + b [i]) ) 
+        #Ts [N+1] = Ts [N]
         Tf [i+1] = (1.0 - omega) * Tf [i] * 0.99 + omega * 0.5 * (Ts [i] + Tss [i])
         
         #qac [i] = At * rho *cs * (1 - eps) * (Ts [i] - Tss [i])
