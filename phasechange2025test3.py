@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 ##### METODO EXPLICITO #####
 
 ##### time advancement #####
-N = 50;
+N = 100;
 kk = 1 # Iterative steps
-dt = 200. #step in seg
+dt = 100. #step in seg
 
 
 ##### Fluid Properties#######
