@@ -3,13 +3,13 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+from numpy import linalg as la
 
-##### METODO EXPLICITO #####
 
 ##### time advancement #####
 N = 100;
 kk = 1 # Iterative steps
-dt = 30. #step in seg
+dt = 60. #step in seg
 
 
 ##### Fluid Properties#######
@@ -21,7 +21,7 @@ cpf = 1007. # J/Kg K specific heat fluid
 ######from Characterization of Alkanes and Paraffin Waxes for Application as Phase Change Energy Storage Medium SYUKRI HIMRAN  ARYADI SUWONO #####
 #m = 0.25 # Kg amount of substance
 rho = 900. #Kg/m3 density of substance      ###CHECK THIS PARAMETER ###
-lamda = 92000. #J/kg latent heat, es 161000 release during phase change of substance
+lamda = 192000. #J/kg latent heat, es 161000 release during phase change of substance
 Cs = 2500. # J/kg K average specific heat (between liquid and solid states)
 # = 2500. + 28 * 1000. * np.exp( (T[i] - 25.881) / 11.91 ) # J/kg K
 x=1./N #liquid fraction
@@ -30,7 +30,7 @@ x=1./N #liquid fraction
 #####Storage Recipied#######
 At = 0.0095 #m2 cross area of storage
 length = 0.15 #length of the storage in meters
-U = 19.5 # losses W/m2 K obtained from UA product
+U = 39.5 # losses W/m2 K obtained from UA product
 #Tref = 1. # Reference temperature in K
 P = 2. * math.pi * math.sqrt (At / math.pi ) # wetted perimeter in meters
 
@@ -49,7 +49,7 @@ S=100
 #Nt = int(S/dt)            # nmb of time intervals
 #S = Nt*dt                 # adjust T to fit time step dt
     
-Ta = np.zeros(10*N+1)     	  #ambient temperature   
+Ta = np.zeros(10*N+1)         #ambient temperature   
 T = np.zeros(N+1)          #solid temperature
 TT = np.zeros(N+1)         
 Tf = np.zeros(N+1)          #fluid temperature
@@ -65,7 +65,7 @@ for i in range(0, 10*N +1 , 1):
 
 ##### CI ######
 for i in range(0, N+1 , 1): 
-    b [i] = ( N * rho * At * length * Cs * omega  + Cs * rho * At * At * length * U  /(mf*cpf)) # J/ºC
+    b [i] = 0.5 * ( N * rho * At * length * Cs * omega  + Cs * rho * At * At * length * U  /(mf*cpf)) # J/ºC
     TT [i] = T [i] = 293.
     Tf [i] = 293.
 
@@ -93,8 +93,10 @@ with open("Tamb2.txt", "r") as archivo:
     #print  "%.2f" % (Ta [i])
 #Ta = np.array(Ta,dtype="float")
 
+#result =  np.la.cond(T)
+#print("Condition number of the matrix:")
+#print(result)
 
-#%%
 ##### ITERATIVE PROCESS#####
 
 while(kk<= 10*N):
@@ -102,20 +104,22 @@ while(kk<= 10*N):
     x = 0.1 + (kk-5)*(1./N)        
     for i in range(1, N + 1 , 1):     
         if T [i] < 310. or T [i] > 311.:
-        	a [i] = N * rho * At * length * Cs * omega * Tf [i-1] +  Cs * rho * At * At * length * U * Ta [kk]/(mf*cpf)
+            a [i] = N * rho * At * length * Cs * omega * Tf [i-1] +  Cs * rho * At * At * length * U * Ta [kk]/(mf*cpf)
         else:
-        	a [i] = N * rho * At * length * Cs * omega * Tf [i-1] - (lamda/dtheta) * (x - xx) +  Cs * rho * At * At * length * U * Ta [kk]/(mf*cpf)
+            a [i] = N * rho * At * length * Cs * omega * Tf [i-1] - (lamda/dtheta) * (x - xx) +  Cs * rho * At * At * length * U * Ta [kk]/(mf*cpf)
         TT [i] = T [i]         
-        T [i] = (Y) * TT [i] / ( Y + b[2]) + a [i] / ( Y + b[2])
+        T [i] = (Y - b[2]) * TT [i] / ( Y + b[2]) + a [i] / ( Y + b[2])
         T [0] = T [1] 
         #print ((Y - b[2]) / ( Y + b[2]))   
         if i < N:
-        	Tf [i] = (1. - omega) * Tf [i-1] + omega * 0.5 * (T [i] + TT [i])
+            Tf [i] = (1. - omega) * Tf [i-1] + omega * 0.5 * (T [i] + TT [i])
         else:
-        	Tf [i] = Tf [i-1]
+            Tf [i] = Tf [i-1]
        
         #print ((x - xx))
     
+
+
         if kk % 10 == 0:
             plt.plot(T,'r--o')
             plt.ylabel('PCM temperature')
@@ -130,3 +134,4 @@ while(kk<= 10*N):
             #print (Ta [kk-1])
     
     kk = kk + 1
+
