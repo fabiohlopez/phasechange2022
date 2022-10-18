@@ -5,6 +5,7 @@ import math
 import matplotlib.pyplot as plt
 from numpy import linalg as la
 
+''' I switched the WHILE loop for a DO-WHILE loop '''
 
 ##### time advancement #####
 N = 100;
@@ -30,7 +31,7 @@ x=1./N #liquid fraction
 #####Storage Recipied#######
 At = 0.0095 #m2 cross area of storage
 length = 0.15 #length of the storage in meters
-U = 39.5 # losses W/m2 K obtained from UA product
+U = 19.5 # losses W/m2 K obtained from UA product
 #Tref = 1. # Reference temperature in K
 P = 2. * math.pi * math.sqrt (At / math.pi ) # wetted perimeter in meters
 
@@ -49,7 +50,7 @@ S=100
 #Nt = int(S/dt)            # nmb of time intervals
 #S = Nt*dt                 # adjust T to fit time step dt
     
-Ta = np.zeros(10*N+1)         #ambient temperature   
+Ta = np.zeros(100*N+1)         #ambient temperature   
 T = np.zeros(N+1)          #solid temperature
 TT = np.zeros(N+1)         
 Tf = np.zeros(N+1)          #fluid temperature
@@ -60,7 +61,7 @@ b = np.zeros(N+1)
 
 #%%
 #***** External data*****#
-for i in range(0, 10*N +1 , 1): 
+for i in range(0, 100*N +1 , 1): 
     Ta [i] = 293.
 
 ##### CI ######
@@ -98,8 +99,7 @@ with open("Tamb2.txt", "r") as archivo:
 #print(result)
 
 ##### ITERATIVE PROCESS#####
-
-while((TT [55] - T [55]) < 10.):
+while True:
     xx = x
     x = 0.1 + (kk-5)*(1./N)        
     for i in range(1, N + 1 , 1):     
@@ -118,9 +118,9 @@ while((TT [55] - T [55]) < 10.):
        
         #print ((x - xx))
     
+        print ("it passed here")
 
-
-        if kk % 10 == 0:
+        if kk % 100 == 0:
             plt.plot(T,'r--o')
             plt.ylabel('PCM temperature')
             #plt.xlabel('Nº of nodes')
@@ -134,4 +134,6 @@ while((TT [55] - T [55]) < 10.):
             #print (Ta [kk-1])
     
     kk = kk + 1
+    if not (la.norm(T)-la.norm(TT))>20.:
+       break
 
