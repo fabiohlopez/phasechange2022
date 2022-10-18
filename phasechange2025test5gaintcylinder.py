@@ -5,6 +5,7 @@ import math
 import matplotlib.pyplot as plt
 from numpy import linalg as la
 
+''' Lets try w a cylinder of L = 0.15 m (height) and D = 0.11 m => A = 0.034 m2'''
 
 ##### time advancement #####
 N = 100;
@@ -28,9 +29,9 @@ x=1./N #liquid fraction
 
 
 #####Storage Recipied#######
-At = 0.0095 #m2 cross area of storage
+At = 0.034 #m2 cross area of storage
 length = 0.15 #length of the storage in meters
-U = 39.5 # losses W/m2 K obtained from UA product
+U = 19.5 # losses W/m2 K obtained from UA product
 #Tref = 1. # Reference temperature in K
 P = 2. * math.pi * math.sqrt (At / math.pi ) # wetted perimeter in meters
 
