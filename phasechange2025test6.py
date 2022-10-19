@@ -44,12 +44,7 @@ omega = (1. - np.exp( (-1.) * NTU/N))
 Y = Cs / dtheta
 
 
-#*****Vector sets*****#
-
-S=100
-#Nt = int(S/dt)            # nmb of time intervals
-#S = Nt*dt                 # adjust T to fit time step dt
-    
+#*****Vector set ups*****#    
 Ta = np.zeros(100*N+1)         #ambient temperature   
 T = np.zeros(N+1)          #solid temperature
 TT = np.zeros(N+1)         
@@ -98,6 +93,7 @@ with open("Tamb2.txt", "r") as archivo:
 #print("Condition number of the matrix:")
 #print(result)
 
+
 ##### ITERATIVE PROCESS#####
 while True:
     xx = x
@@ -115,11 +111,12 @@ while True:
             Tf [i] = (1. - omega) * Tf [i-1] + omega * 0.5 * (T [i] + TT [i])
         else:
             Tf [i] = Tf [i-1]
-       
-        #print ((x - xx))
-    
-        print ("it passed here")
+           
+        print ("it was here")
 
+       
+
+        # Print section
         if kk % 100 == 0:
             plt.plot(T,'r--o')
             plt.ylabel('PCM temperature')
@@ -130,10 +127,8 @@ while True:
             plt.savefig('figure'+str(kk)+'.png', format='PNG')
             plt.clf()
             #plt.show()
-            #print  "%.2f %.2f" % ( Tf [i], T [i])
-            #print (Ta [kk-1])
     
     kk = kk + 1
-    if not (la.norm(T)-la.norm(TT))>20.:
+    if not (la.norm(T)-la.norm(TT))<20.:
        break
 
