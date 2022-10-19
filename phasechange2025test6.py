@@ -10,7 +10,7 @@ from numpy import linalg as la
 ##### time advancement #####
 N = 100;
 kk = 1 # Iterative steps
-dt = 60. #step in seg
+dt = 30. #step in seg
 
 
 ##### Fluid Properties#######
@@ -129,6 +129,6 @@ while True:
             #plt.show()
     
     kk = kk + 1
-    if not (la.norm(T)-la.norm(TT))<20.:
+    if (la.norm(T)-la.norm(TT))<1.:
        break
 
