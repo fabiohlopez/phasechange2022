@@ -10,7 +10,7 @@ from numpy import linalg as la
 ##### time advancement #####
 N = 100;
 kk = 1 # Iterative steps
-dt = 30. #step in seg
+dt = 60. #step in seg
 
 
 ##### Fluid Properties#######
@@ -71,7 +71,6 @@ Tf [0] = Tf [1] = 343.
 
 ###### Print section #####
 deltatime = (Y - b[2]) / ( Y + b[2])
-#deltatime = dtheta
 dtm = 2. * 0.17 * Cs / (N * omega * mf * cpf + At * U)
 formatted_float = "{:.3f}".format(deltatime)
 formatted_vector = "{:.3f}".format(dtm)
@@ -106,14 +105,13 @@ while True:
         TT [i] = T [i]         
         T [i] = (Y - b[2]) * TT [i] / ( Y + b[2]) + a [i] / ( Y + b[2])
         T [0] = T [1] 
-        #print ((Y - b[2]) / ( Y + b[2]))   
+        #print ("es el coef positivo?",(Y - b[2]) / ( Y + b[2]))   
+        print ("is a variable",a [i])
         if i < N:
             Tf [i] = (1. - omega) * Tf [i-1] + omega * 0.5 * (T [i] + TT [i])
         else:
             Tf [i] = Tf [i-1]
            
-        print ("it was here")
-
        
 
         # Print section
@@ -121,14 +119,14 @@ while True:
             plt.plot(T,'r--o')
             plt.ylabel('PCM temperature')
             #plt.xlabel('Nº of nodes')
-            plt.yticks ([300.,305.,310.,315.,320.])
+            plt.yticks ([300.,320.,340.,360.,380.])
             plt.xticks ([1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
             #plt.hold('on')
             plt.savefig('figure'+str(kk)+'.png', format='PNG')
             plt.clf()
-            #plt.show()
+            if (la.norm(T)-la.norm(TT))<1.:
+                break
     
     kk = kk + 1
-    if (la.norm(T)-la.norm(TT))<1.:
-       break
+    
 
