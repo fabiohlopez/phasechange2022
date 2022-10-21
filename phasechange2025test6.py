@@ -22,7 +22,7 @@ cpf = 1007. # J/Kg K specific heat fluid
 ######from Characterization of Alkanes and Paraffin Waxes for Application as Phase Change Energy Storage Medium SYUKRI HIMRAN  ARYADI SUWONO #####
 #m = 0.25 # Kg amount of substance
 rho = 900. #Kg/m3 density of substance      ###CHECK THIS PARAMETER ###
-lamda = 192000. #J/kg latent heat, es 161000 release during phase change of substance
+lamda = 155000. #J/kg latent heat, es 161000 release during phase change of substance
 Cs = 2500. # J/kg K average specific heat (between liquid and solid states)
 # = 2500. + 28 * 1000. * np.exp( (T[i] - 25.881) / 11.91 ) # J/kg K
 x=1./N #liquid fraction
@@ -31,7 +31,7 @@ x=1./N #liquid fraction
 #####Storage Recipied#######
 At = 0.0095 #m2 cross area of storage
 length = 0.15 #length of the storage in meters
-U = 19.5 # losses W/m2 K obtained from UA product
+U = 18. # losses W/m2 K obtained from UA product
 #Tref = 1. # Reference temperature in K
 P = 2. * math.pi * math.sqrt (At / math.pi ) # wetted perimeter in meters
 
@@ -45,7 +45,7 @@ Y = Cs / dtheta
 
 
 #*****Vector set ups*****#    
-Ta = np.zeros(100*N+1)         #ambient temperature   
+Ta = np.zeros(10*N+1)         #ambient temperature   
 T = np.zeros(N+1)          #solid temperature
 TT = np.zeros(N+1)         
 Tf = np.zeros(N+1)          #fluid temperature
@@ -56,7 +56,7 @@ b = np.zeros(N+1)
 
 #%%
 #***** External data*****#
-for i in range(0, 100*N +1 , 1): 
+for i in range(0, 10*N +1 , 1): 
     Ta [i] = 293.
 
 ##### CI ######
@@ -105,7 +105,7 @@ while True:
         TT [i] = T [i]         
         T [i] = (Y - b[2]) * TT [i] / ( Y + b[2]) + a [i] / ( Y + b[2])
         T [0] = T [1] 
-        #print ("es el coef positivo?",(Y - b[2]) / ( Y + b[2]))   
+        #print ("es el coef positivo and smaller then 1?",(Y - b[2]) / ( Y + b[2]))   
         print ("is a variable",a [i])
         if i < N:
             Tf [i] = (1. - omega) * Tf [i-1] + omega * 0.5 * (T [i] + TT [i])
